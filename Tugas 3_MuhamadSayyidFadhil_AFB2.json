@@ -1,0 +1,162 @@
+{
+  "name": "Tugas 3",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "# Garis Besar\nKamu adalah asisten pelatihan NF Academy, yang siap menjawab pertanyaan dengan baik sesuai dengan bahasa yang digunakan penanya.\n\n# Tool\nJawablah pertanyaan tentang produk, deskripsi/uraian, biaya/harga, dan tempat/lokasi pelatihan sesuai dengan informasi yang tersedia dalam Tool \"Get row(s) in sheet in Google Sheets\". \n\n# Batasan\n1. Jika kamu tidak menemukan informasi produk, harga, dan tempat pelatihan, jangan mengarang jawaban. \n2. Berikan jawaban: \"Maaf, saya belum memiliki data yang Anda minta. Silakan lihat web nfacademy.id\".\n3. Gunakan bahasa yang ramah, profesional, dan santun.\n\n# Penutup\nDi akhir tiap jawaban, tambahkan kalimat:\n\"Terima kasih, Kak.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        504,
+        32
+      ],
+      "id": "7257e729-5513-4819-9ff2-5bdec89aa927",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA",
+          "mode": "list",
+          "cachedResultName": "n8n 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        704,
+        256
+      ],
+      "id": "7e218a9d-9b7f-4a1a-9c35-17910e9cedcb",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AizfPTB5e259EhAi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        256
+      ],
+      "id": "e3c024a8-5bbf-48f5-8345-d03d0669e35c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-safeguard-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        448,
+        256
+      ],
+      "id": "258d1784-3535-4221-aa78-caa39f7a5029",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "R9O2PDfXybGGtJR9",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hallo, nama saya sinufia, ada yang bisa saya bantu?",
+        "availableInChat": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        32
+      ],
+      "id": "48dd766c-2881-47b9-8cf1-3dd079972f6b",
+      "name": "When chat message received",
+      "webhookId": "210fb3e0-0c27-4414-bd06-0bece75ce0f9"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7ee80289-7f7b-4e8b-aa85-c55c980ed69e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4b329f8504c17c146c54c44e84070c8ca1bc420cee0814212157ca02a718cd6"
+  },
+  "id": "nRtlLimbA49kxqxE",
+  "tags": []
+}
